@@ -58,3 +58,7 @@ export const login = async (
   );
   res.json({ user, token });
 };
+
+export const me = async (req: Request, res: Response) => {
+  res.json({ user: req.user });
+};
