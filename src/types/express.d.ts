@@ -1,8 +1,11 @@
+// types/express/index.d.ts
+import * as express from "express";
 import { User } from "../generated/prisma";
-import express from "express";
 
-declare module "express" {
-  export interface Request {
-    user: User;
+declare global {
+  namespace Express {
+    interface Request {
+      user: User | null;
+    }
   }
 }

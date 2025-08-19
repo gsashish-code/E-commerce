@@ -10,11 +10,16 @@ const authMiddleware = async (
   next: NextFunction
 ) => {
   // 1. extract token from headers
-  const token = req.headers.authorization!;
+  const bearertoken = req.headers.authorization!;
+  const token =
+    bearertoken && bearertoken.split(" ")?.length > 1
+      ? bearertoken.split(" ")[1]
+      : "";
+  console.log("🚀 ~ authMiddleware ~ token:", token);
 
   // 2. token is not present, throw unauthorized error
   if (!token)
-    next(
+    return next(
       new UnAuthorized("user is not authorized!", ErrorCode.USER_NOT_AUTHORIZED)
     );
   try {
