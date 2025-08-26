@@ -11,6 +11,12 @@ export const errorHandler = (method: Function) => {
       console.log("🚀 ~ errorHandler ~ error:", error);
       if (error instanceof HTTPException) {
         exception = error;
+      } else if (error.name === "ZodError") {
+        exception = new InternalException(
+          "Validation error",
+          error,
+          ErrorCode.UNPROCESSABLE_ENTITY
+        );
       } else {
         exception = new InternalException(
           "Something went wrong!",
@@ -18,7 +24,7 @@ export const errorHandler = (method: Function) => {
           ErrorCode.INTERNAL_SERVER_ERROR
         );
       }
+      next(exception);
     }
-    next();
   };
 };
