@@ -9,17 +9,13 @@ import { success } from "zod";
 export const addAddress = async (request: Request, response: Response) => {
   const validAddress = AddressSchema.parse(request.body);
   try {
-    if (!request.user?.id)
-      throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-    else {
-      const address = await prismaClient.address.create({
-        data: {
-          ...validAddress,
-          userId: request.user.id,
-        },
-      });
-      response.json({ data: address });
-    }
+    const address = await prismaClient.address.create({
+      data: {
+        ...validAddress,
+        userId: request.user.id,
+      },
+    });
+    response.json({ data: address });
   } catch (error) {
     throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
   }
@@ -47,14 +43,10 @@ export const deleteAddress = async (request: Request, response: Response) => {
 
 export const getAddresses = async (request: Request, response: Response) => {
   try {
-    if (!request.user?.id)
-      throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
-    else {
-      const addresses = await prismaClient.address.findMany({
-        where: { userId: +request.user?.id },
-      });
-      response.json({ data: addresses });
-    }
+    const addresses = await prismaClient.address.findMany({
+      where: { userId: +request.user.id },
+    });
+    response.json({ data: addresses });
   } catch (error) {
     throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND);
   }
@@ -79,7 +71,7 @@ export const updateUser = async (request: Request, response: Response) => {
       );
     }
     // checking if the address belongs to the user createdBy user should be same
-    if (shippingAddress.userId !== request.user?.id) {
+    if (shippingAddress.userId !== request.user.id) {
       throw new NotFoundException(
         "Shipping Address Not Found",
         ErrorCode.ADDRESS_NOT_PRESENT
@@ -101,7 +93,7 @@ export const updateUser = async (request: Request, response: Response) => {
       );
     }
     // checking if the address belongs to the user createdBy user should be same
-    if (billingAddress.userId !== request.user?.id) {
+    if (billingAddress.userId !== request.user.id) {
       throw new NotFoundException(
         "Shipping Address Not Found",
         ErrorCode.ADDRESS_NOT_PRESENT
@@ -109,16 +101,14 @@ export const updateUser = async (request: Request, response: Response) => {
     }
   }
 
-  if (request.user?.id) {
-    const updateData = Object.fromEntries(
-      Object.entries(validatedUser).filter(([_, value]) => value !== undefined)
-    );
-    const updatedUser = await prismaClient.user.update({
-      where: {
-        id: Number(request.user?.id),
-      },
-      data: updateData,
-    });
-    response.json({ data: updatedUser });
-  }
+  const updateData = Object.fromEntries(
+    Object.entries(validatedUser).filter(([_, value]) => value !== undefined)
+  );
+  const updatedUser = await prismaClient.user.update({
+    where: {
+      id: Number(request.user.id),
+    },
+    data: updateData,
+  });
+  response.json({ data: updatedUser });
 };
