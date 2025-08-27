@@ -14,6 +14,22 @@ app.get("/", (req: Request, res: Response) => {
 
 export const prismaClient = new PrismaClient({
   log: ["query"],
+}).$extends({
+  result: {
+    address: {
+      formattedAddress: {
+        needs: {
+          lineOne: true,
+          lineTwo: true,
+          city: true,
+          country: true,
+          pincode: true,
+        },
+        compute: (address) =>
+          `${address.lineOne},${address.lineTwo},${address.city},${address.country}- ${address.pincode}`,
+      },
+    },
+  },
 });
 
 app.use(errorMiddleware);

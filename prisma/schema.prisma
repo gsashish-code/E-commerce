@@ -61,14 +61,15 @@ model Address {
 }
 
 model Product {
-  id          Int        @id @default(autoincrement())
-  name        String
-  description String
-  price       Decimal
-  tags        String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  cartItems   CartItem[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String
+  price        Decimal
+  tags         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  cartItems    CartItem[]
+  OrderProduct OrderProduct[]
 
   @@map("products")
 }
@@ -87,13 +88,14 @@ model CartItem {
 }
 
 model Order {
-  id           Int            @id @default(autoincrement())
+  id           Int              @id @default(autoincrement())
   userId       Int
-  user         User           @relation(fields: [userId], references: [id])
+  user         User             @relation(fields: [userId], references: [id])
   netAmount    Decimal
   address      String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  status       OrderEventStatus @default(PENDING)
   orderProduct OrderProduct[]
   orderEvent   OrderEvent[]
 
@@ -105,6 +107,8 @@ model OrderProduct {
   orderId   Int
   order     Order    @relation(fields: [orderId], references: [id])
   quantity  Int
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
