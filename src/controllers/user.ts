@@ -65,11 +65,11 @@ export const updateUser = async (request: Request, response: Response) => {
   let shippingAddress: Address;
   let billingAddress: Address;
 
-  if (validatedUser.defaultShippingAddressId) {
+  if (validatedUser.defaultShippingAddress) {
     try {
       shippingAddress = await prismaClient.address.findFirstOrThrow({
         where: {
-          id: Number(validatedUser.defaultShippingAddressId),
+          id: Number(validatedUser.defaultShippingAddress),
         },
       });
     } catch (error) {
@@ -87,11 +87,11 @@ export const updateUser = async (request: Request, response: Response) => {
     }
   }
 
-  if (validatedUser.defaultBillingAddressId) {
+  if (validatedUser.defaultBillingAddress) {
     try {
       billingAddress = await prismaClient.address.findFirstOrThrow({
         where: {
-          id: Number(validatedUser.defaultBillingAddressId),
+          id: Number(validatedUser.defaultBillingAddress),
         },
       });
     } catch (error) {

@@ -19,6 +19,6 @@ userRouter.delete(
   errorHandler(deleteAddress)
 );
 userRouter.get("/address", [authMiddleware], errorHandler(getAddresses));
-userRouter.get("/", [authMiddleware], errorHandler(updateUser));
+userRouter.put("/", [authMiddleware], errorHandler(updateUser));
 
 export default userRouter;
