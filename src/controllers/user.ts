@@ -78,6 +78,13 @@ export const updateUser = async (request: Request, response: Response) => {
         ErrorCode.ADDRESS_NOT_PRESENT
       );
     }
+    // checking if the address belongs to the user createdBy user should be same
+    if (shippingAddress.userId !== request.user?.id) {
+      throw new NotFoundException(
+        "Shipping Address Not Found",
+        ErrorCode.ADDRESS_NOT_PRESENT
+      );
+    }
   }
 
   if (validatedUser.defaultBillingAddressId) {
@@ -90,6 +97,13 @@ export const updateUser = async (request: Request, response: Response) => {
     } catch (error) {
       throw new NotFoundException(
         "Billing Address Not Found",
+        ErrorCode.ADDRESS_NOT_PRESENT
+      );
+    }
+    // checking if the address belongs to the user createdBy user should be same
+    if (billingAddress.userId !== request.user?.id) {
+      throw new NotFoundException(
+        "Shipping Address Not Found",
         ErrorCode.ADDRESS_NOT_PRESENT
       );
     }
